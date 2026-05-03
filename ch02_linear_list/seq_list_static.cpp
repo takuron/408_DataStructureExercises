@@ -1,4 +1,4 @@
-#include <stdio.h>
+#include "common.h"
 
 // 1. 定义顺序表结构 (静态分配方式)
 #define MaxSize 50 // 静态数组的最大容量
@@ -78,6 +78,49 @@ void PrintList(SeqList L);
 // [在此处编写你的实现代码]
 // ==========================================
 
+// --- 以下为桩实现，仅保证编译通过，逻辑需要你自行填写 ---
+
+bool InitList(SeqList &L) {
+    // TODO: 将 length 置为 0
+    L.length = 0;
+    return true;
+}
+
+bool ListInsert(SeqList &L, int i, int e) {
+    // TODO: 在第 i 位插入元素 e
+    // 1. 检查 i 是否合法 [1, L.length+1]
+    // 2. 检查表是否已满
+    // 3. 将第 i 位及之后的元素后移
+    // 4. 放入 e，length++
+    return false;  // 桩：默认插入失败
+}
+
+bool ListDelete(SeqList &L, int i, int &e) {
+    // TODO: 删除第 i 位元素，值通过 e 带出
+    return false;  // 桩：默认删除失败
+}
+
+int LocateElem(SeqList L, int e) {
+    // TODO: 查找值为 e 的第一个元素，返回位序；未找到返回 0
+    return 0;  // 桩：默认未找到
+}
+
+bool GetElem(SeqList L, int i, int &e) {
+    // TODO: 获取第 i 位元素的值
+    return false;  // 桩：默认获取失败
+}
+
+int Length(SeqList L) {
+    // TODO: 返回顺序表当前长度
+    return L.length;
+}
+
+void PrintList(SeqList L) {
+    // TODO: 遍历打印所有有效元素
+    for (int k = 0; k < L.length; k++) {
+        printf("%d ", L.data[k]);
+    }
+}
 
 
 
