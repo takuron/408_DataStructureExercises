@@ -88,26 +88,39 @@ bool InitList(SeqList &L) {
 
 bool ListInsert(SeqList &L, int i, int e) {
     // TODO: 在第 i 位插入元素 e
-    // 1. 检查 i 是否合法 [1, L.length+1]
-    // 2. 检查表是否已满
-    // 3. 将第 i 位及之后的元素后移
-    // 4. 放入 e，length++
-    return false;  // 桩：默认插入失败
+    if(i>=L.length+2 ||i<=0) return false;
+    if(L.length>=MaxSize) return false;
+    for(int j=L.length-1;j>=i-1;j--)
+        L.data[j+1] = L.data[j];
+
+    L.data[i-1] = e;
+    L.length ++;
+    return true;
 }
 
 bool ListDelete(SeqList &L, int i, int &e) {
     // TODO: 删除第 i 位元素，值通过 e 带出
-    return false;  // 桩：默认删除失败
+    if(i>=L.length+1||i<=0) return false;
+    e = L.data[i-1];
+    for(int j = i;j<=L.length-1;j++)
+        L.data[j-1] = L.data[j];
+    L.length --;
+    return true;
 }
 
 int LocateElem(SeqList L, int e) {
     // TODO: 查找值为 e 的第一个元素，返回位序；未找到返回 0
-    return 0;  // 桩：默认未找到
+    for(int i=0;i<L.length;i++){
+        if(L.data[i]==e) return i+1;
+    }
+    return 0;
 }
 
 bool GetElem(SeqList L, int i, int &e) {
     // TODO: 获取第 i 位元素的值
-    return false;  // 桩：默认获取失败
+    if(i>=L.length+1||i<=0) return false;
+    e = L.data[i-1];
+    return true;
 }
 
 int Length(SeqList L) {
