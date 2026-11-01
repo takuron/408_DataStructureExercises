@@ -1,5 +1,5 @@
 // 练习：折半插入排序
-// 只提供契约、桩函数和测试；请自行完成 TODO。
+// 参考答案：保留原练习契约和测试，可与 main 分支对照学习。
 // 禁止用 STL 排序代替练习；int 用例只检验结果，不检验稳定性，稳定性需结合相等记录的相对次序理解。
 #include "common.h"
 
@@ -10,13 +10,22 @@
 /** 用折半查找确定插入位置，整体后移；相等元素插在已有等值元素之后以保持稳定。 n>=0；升序原地输出；n=0 时允许 a=nullptr。 */
 void BinaryInsertSort(int a[], int n);
 
-// --- 在此处编写实现 ---
+// --- 参考实现 ---
 void BinaryInsertSort(int a[], int n) {
-    // TODO: 用折半查找确定插入位置，整体后移；相等元素插在已有等值元素之后以保持稳定。 n>=0；升序原地输出；n=0 时允许 a=nullptr。
-    (void)a; (void)n;
+    for (int i = 1; i < n; ++i) {
+        int value = a[i], low = 0, high = i;
+        // 找首个 > value 的位置，相等时插在后面以保持稳定。
+        while (low < high) {
+            int mid = low + (high-low)/2;
+            if (a[mid] <= value) low = mid+1;
+            else high = mid;
+        }
+        for (int j = i; j > low; --j) a[j] = a[j-1];
+        a[low] = value;
+    }
 }
 
-// --- 测试入口：未实现时出现 FAIL 是正常现象 ---
+// --- 测试入口 ---
 int main() {
     printf("--- 折半插入排序 ---\n");
 

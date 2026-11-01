@@ -1,5 +1,5 @@
 // 练习：带头结点循环双链表
-// 只提供契约、桩函数和测试；请自行完成 TODO。
+// 参考答案：保留原练习契约和测试，可与 main 分支对照学习。
 // 失败操作不得改变原结构或输出参数；动态申请的空间需在销毁时释放。
 #include "common.h"
 
@@ -20,28 +20,53 @@ bool ListDelete(DLinkList L, int i, int &e);
 /** 释放包括头结点在内的全部结点，L 置空；循环结构不得无限遍历。 */
 void DestroyList(DLinkList &L);
 
-// --- 在此处编写实现 ---
+// --- 参考实现 ---
 bool InitList(DLinkList &L) {
-    // TODO: 创建头结点；空表时 prior、next 均指向头结点。
-    return false;
+    DNode *p = static_cast<DNode *>(malloc(sizeof(DNode)));
+    if (!p) return false;
+    p->prior = p->next = p;
+    L = p;
+    return true;
 }
 
 bool ListInsert(DLinkList L, int i, int e) {
-    // TODO: 在位序 [1,长度+1] 插入，维护前驱后继双向链接；失败返回 false。
-    return false;
+    if (!L || i < 1) return false;
+    DNode *prev = L;
+    for (int j = 1; j < i; ++j) {
+        if (prev->next == L) return false;
+        prev = prev->next;
+    }
+    DNode *p = static_cast<DNode *>(malloc(sizeof(DNode)));
+    if (!p) return false;
+    *p = {e, prev, prev->next};
+    if (prev->next) prev->next->prior = p;
+    prev->next = p;
+    return true;
 }
 
 bool ListDelete(DLinkList L, int i, int &e) {
-    // TODO: 删除第 i 个数据结点（不得删除头结点），维护双向链接并释放。
-    return false;
+    if (!L || i < 1) return false;
+    DNode *prev = L;
+    for (int j = 1; j < i; ++j) {
+        if (prev->next == L) return false;
+        prev = prev->next;
+    }
+    DNode *p = prev->next;
+    if (p == L) return false;
+    e = p->data;
+    prev->next = p->next;
+    if (p->next) p->next->prior = prev;
+    free(p);
+    return true;
 }
 
 void DestroyList(DLinkList &L) {
-    // TODO: 释放包括头结点在内的全部结点，L 置空；循环结构不得无限遍历。
-    (void)L;
+    if (!L) return;
+    L->prior->next = nullptr;
+    while (L) { DNode *p = L; L = L->next; free(p); }
 }
 
-// --- 测试入口：未实现时出现 FAIL 是正常现象 ---
+// --- 测试入口 ---
 int main() {
     printf("--- 带头结点循环双链表 ---\n");
 

@@ -1,5 +1,5 @@
 // 练习：AVL 树插入与旋转（进阶）
-// 只提供契约、桩函数和测试；请自行完成 TODO。
+// 参考答案：保留原练习契约和测试，可与 main 分支对照学习。
 // 失败操作不得改变原结构或输出参数；动态申请的空间需在销毁时释放。
 #include "common.h"
 
@@ -20,28 +20,55 @@ bool InsertAVL(AVLNode *&root, int key);
 /** 后序释放结点并置空。 */
 void DestroyAVL(AVLNode *&root);
 
-// --- 在此处编写实现 ---
+static int Height(AVLNode *p) { return p ? p->height : 0; }
+static void UpdateHeight(AVLNode *p) {
+    int left = Height(p->left), right = Height(p->right);
+    p->height = 1 + (left > right ? left : right);
+}
+
+// --- 参考实现 ---
 AVLNode *RotateLeft(AVLNode *root) {
-    // TODO: root 的右孩子非空；左旋并更新高度，返回新根。
-    return root;
+    AVLNode *p = root->right;
+    root->right = p->left; p->left = root;
+    UpdateHeight(root); UpdateHeight(p);
+    return p;
 }
 
 AVLNode *RotateRight(AVLNode *root) {
-    // TODO: root 的左孩子非空；右旋并更新高度，返回新根。
-    return root;
+    AVLNode *p = root->left;
+    root->left = p->right; p->right = root;
+    UpdateHeight(root); UpdateHeight(p);
+    return p;
 }
 
 bool InsertAVL(AVLNode *&root, int key) {
-    // TODO: 插入并处理 LL/RR/LR/RL 失衡；重复值或分配失败返回 false。
-    return false;
+    if (!root) {
+        AVLNode *p = static_cast<AVLNode *>(malloc(sizeof(AVLNode)));
+        if (!p) return false;
+        *p = {key, 1, nullptr, nullptr}; root = p;
+        return true;
+    }
+    if (key == root->key) return false;
+    bool inserted = key < root->key ? InsertAVL(root->left,key) : InsertAVL(root->right,key);
+    if (!inserted) return false;
+    UpdateHeight(root);
+    int balance = Height(root->left) - Height(root->right);
+    if (balance > 1) {
+        if (key > root->left->key) root->left = RotateLeft(root->left); // LR
+        root = RotateRight(root); // LL
+    } else if (balance < -1) {
+        if (key < root->right->key) root->right = RotateRight(root->right); // RL
+        root = RotateLeft(root); // RR
+    }
+    return true;
 }
 
 void DestroyAVL(AVLNode *&root) {
-    // TODO: 后序释放结点并置空。
-    (void)root;
+    if (!root) return;
+    DestroyAVL(root->left); DestroyAVL(root->right); free(root); root = nullptr;
 }
 
-// --- 测试入口：未实现时出现 FAIL 是正常现象 ---
+// --- 测试入口 ---
 int main() {
     printf("--- AVL 树插入与旋转（进阶） ---\n");
 

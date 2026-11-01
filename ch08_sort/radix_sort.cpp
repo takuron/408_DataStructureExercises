@@ -1,5 +1,5 @@
 // 练习：基数排序（LSD）
-// 只提供契约、桩函数和测试；请自行完成 TODO。
+// 参考答案：保留原练习契约和测试，可与 main 分支对照学习。
 // 禁止用 STL 排序代替练习；int 用例只检验结果，不检验稳定性，稳定性需结合相等记录的相对次序理解。
 #include "common.h"
 
@@ -10,13 +10,26 @@
 /** 仅处理非负 int；按十进制从低位到高位稳定分配与收集；最大位循环须避免 int 溢出。 n>=0；升序原地输出；n=0 时允许 a=nullptr。 */
 void RadixSort(int a[], int n);
 
-// --- 在此处编写实现 ---
+// --- 参考实现 ---
 void RadixSort(int a[], int n) {
-    // TODO: 仅处理非负 int；按十进制从低位到高位稳定分配与收集；最大位循环须避免 int 溢出。 n>=0；升序原地输出；n=0 时允许 a=nullptr。
-    (void)a; (void)n;
+    if (n < 2) return;
+    int maximum = 0;
+    for (int i = 0; i < n; ++i) if (a[i] > maximum) maximum = a[i];
+    int *temp = new int[n];
+    for (int place = 1; maximum / place > 0; ) {
+        int count[10] = {};
+        for (int i = 0; i < n; ++i) ++count[(a[i]/place)%10];
+        for (int d = 1; d < 10; ++d) count[d] += count[d-1];
+        // 反向扫描，按前缀和放置，保证每一趟稳定。
+        for (int i = n-1; i >= 0; --i) temp[--count[(a[i]/place)%10]] = a[i];
+        for (int i = 0; i < n; ++i) a[i] = temp[i];
+        if (place > maximum / 10) break; // 先判断再乘 10，防止溢出。
+        place *= 10;
+    }
+    delete[] temp;
 }
 
-// --- 测试入口：未实现时出现 FAIL 是正常现象 ---
+// --- 测试入口 ---
 int main() {
     printf("--- 基数排序（LSD） ---\n");
 

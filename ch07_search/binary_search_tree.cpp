@@ -1,5 +1,5 @@
 // 练习：二叉排序树 BST
-// 只提供契约、桩函数和测试；请自行完成 TODO。
+// 参考答案：保留原练习契约和测试，可与 main 分支对照学习。
 // 失败操作不得改变原结构或输出参数；动态申请的空间需在销毁时释放。
 #include "common.h"
 
@@ -23,33 +23,53 @@ int InOrder(BSTree T, int out[]);
 /** 后序释放全部结点并置空。 */
 void DestroyTree(BSTree &T);
 
-// --- 在此处编写实现 ---
+// --- 参考实现 ---
 BSTNode *Search(BSTree T, int key) {
-    // TODO: 返回匹配结点，找不到返回 nullptr。
-    return nullptr;
+    while (T && T->key != key) T = key < T->key ? T->left : T->right;
+    return T;
 }
 
 bool Insert(BSTree &T, int key) {
-    // TODO: 插入不同关键字；重复值或分配失败返回 false。
-    return false;
+    if (!T) {
+        BSTNode *p = static_cast<BSTNode *>(malloc(sizeof(BSTNode)));
+        if (!p) return false;
+        *p = {key, nullptr, nullptr}; T = p;
+        return true;
+    }
+    if (key == T->key) return false;
+    return key < T->key ? Insert(T->left,key) : Insert(T->right,key);
 }
 
 bool Delete(BSTree &T, int key) {
-    // TODO: 删除关键字结点并释放；处理叶子、单孩子和双孩子三种情况；不存在返回 false。
-    return false;
+    if (!T) return false;
+    if (key < T->key) return Delete(T->left,key);
+    if (key > T->key) return Delete(T->right,key);
+    if (T->left && T->right) {
+        // 双孩子：用中序后继替换，再删除后继结点。
+        BSTNode *p = T->right;
+        while (p->left) p = p->left;
+        T->key = p->key;
+        return Delete(T->right,p->key);
+    }
+    BSTNode *old = T;
+    T = T->left ? T->left : T->right;
+    free(old);
+    return true;
 }
 
 int InOrder(BSTree T, int out[]) {
-    // TODO: 中序遍历写入 out，返回元素个数；out 容量由调用者保证。
-    return 0;
+    if (!T) return 0;
+    int n = InOrder(T->left,out);
+    out[n++] = T->key;
+    return n + InOrder(T->right,out+n);
 }
 
 void DestroyTree(BSTree &T) {
-    // TODO: 后序释放全部结点并置空。
-    (void)T;
+    if (!T) return;
+    DestroyTree(T->left); DestroyTree(T->right); free(T); T = nullptr;
 }
 
-// --- 测试入口：未实现时出现 FAIL 是正常现象 ---
+// --- 测试入口 ---
 int main() {
     printf("--- 二叉排序树 BST ---\n");
 

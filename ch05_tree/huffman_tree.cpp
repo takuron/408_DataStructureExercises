@@ -1,6 +1,6 @@
 // 练习：哈夫曼树与带权路径长度
-// 只提供契约、桩函数和测试；请自行完成 TODO。
-// tree 容量至少 2*n-1；同权结点可任选，但 WPL 必须最小；测试权值总和保证不溢出 int。
+// 参考答案：保留原练习契约和测试，可与 main 分支对照学习。
+// tree 容量至少 2*n-1；同权结点可任选，但 WPL 必须最小；约定权值总和及 WPL 均可用 int 表示。
 #include "common.h"
 
 // --- 数据结构定义 ---
@@ -14,18 +14,35 @@ bool BuildHuffman(const int weights[], int n, HNode tree[]);
 /** 求叶子的权值乘根到叶子的边数之和；单叶树为 0。 */
 int WeightedPathLength(const HNode tree[], int n);
 
-// --- 在此处编写实现 ---
+// --- 参考实现 ---
 bool BuildHuffman(const int weights[], int n, HNode tree[]) {
-    // TODO: n 范围 [1,MAX_SIZE]，权值为正；构造 2*n-1 个结点，根下标 2*n-2；非法输入返回 false。
-    return false;
+    if (!weights || !tree || n < 1 || n > MAX_SIZE) return false;
+    for (int i = 0; i < n; ++i) if (weights[i] <= 0) return false;
+    for (int i = 0; i < 2*n-1; ++i) tree[i] = {i < n ? weights[i] : 0, -1, -1, -1};
+    for (int i = n; i < 2*n-1; ++i) {
+        int a = -1, b = -1;
+        // 每轮选择尚无父结点的两个最小权值根；同权按下标优先。
+        for (int j = 0; j < i; ++j) if (tree[j].parent == -1) {
+            if (a == -1 || tree[j].weight < tree[a].weight) { b = a; a = j; }
+            else if (b == -1 || tree[j].weight < tree[b].weight) b = j;
+        }
+        tree[a].parent = tree[b].parent = i;
+        tree[i] = {tree[a].weight + tree[b].weight, -1, a, b};
+    }
+    return true;
 }
 
 int WeightedPathLength(const HNode tree[], int n) {
-    // TODO: 求叶子的权值乘根到叶子的边数之和；单叶树为 0。
-    return -1;
+    int wpl = 0;
+    for (int i = 0; i < n; ++i) {
+        int depth = 0;
+        for (int p = i; tree[p].parent != -1; p = tree[p].parent) ++depth;
+        wpl += tree[i].weight * depth;
+    }
+    return wpl;
 }
 
-// --- 测试入口：未实现时出现 FAIL 是正常现象 ---
+// --- 测试入口 ---
 int main() {
     printf("--- 哈夫曼树与带权路径长度 ---\n");
 

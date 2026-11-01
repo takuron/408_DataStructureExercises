@@ -1,5 +1,5 @@
 // 练习：树的孩子兄弟表示
-// 只提供契约、桩函数和测试；请自行完成 TODO。
+// 参考答案：保留原练习契约和测试，可与 main 分支对照学习。
 // 测试结点是栈上对象；out 容量由调用者保证；树高按原树的层数计算，不是二叉链表高度。
 #include "common.h"
 
@@ -20,28 +20,49 @@ int ForestHeight(CSNode *root);
 /** 没有 firstChild 的结点是原树叶子；统计森林中叶子总数。 */
 int LeafCount(CSNode *root);
 
-// --- 在此处编写实现 ---
+static void WritePre(CSNode *p, char out[], int &n) {
+    if (!p) return;
+    out[n++] = p->data;
+    WritePre(p->firstChild, out, n);
+    WritePre(p->nextSibling, out, n);
+}
+static void WritePost(CSNode *p, char out[], int &n) {
+    if (!p) return;
+    WritePost(p->firstChild, out, n);
+    out[n++] = p->data;
+    WritePost(p->nextSibling, out, n);
+}
+
+// --- 参考实现 ---
 int PreOrderForest(CSNode *root, char out[]) {
-    // TODO: 树/森林先根遍历（等价于对应二叉树先序）；写入 out，返回元素数。
-    return 0;
+    int n = 0;
+    WritePre(root, out, n);
+    return n;
 }
 
 int PostOrderForest(CSNode *root, char out[]) {
-    // TODO: 树/森林后根遍历（等价于对应二叉树中序）；返回元素数。
-    return 0;
+    int n = 0;
+    WritePost(root, out, n);
+    return n;
 }
 
 int ForestHeight(CSNode *root) {
-    // TODO: 返回森林中各棵树高度的最大值；空森林为 0；兄弟关系不增加深度。
-    return 0;
+    int height = 0;
+    for (CSNode *p = root; p; p = p->nextSibling) {
+        int h = 1 + ForestHeight(p->firstChild);
+        if (h > height) height = h;
+    }
+    return height;
 }
 
 int LeafCount(CSNode *root) {
-    // TODO: 没有 firstChild 的结点是原树叶子；统计森林中叶子总数。
-    return 0;
+    int n = 0;
+    for (CSNode *p = root; p; p = p->nextSibling)
+        n += p->firstChild ? LeafCount(p->firstChild) : 1;
+    return n;
 }
 
-// --- 测试入口：未实现时出现 FAIL 是正常现象 ---
+// --- 测试入口 ---
 int main() {
     printf("--- 树的孩子兄弟表示 ---\n");
 

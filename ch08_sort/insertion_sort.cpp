@@ -1,5 +1,5 @@
 // 练习：直接插入排序
-// 只提供契约、桩函数和测试；请自行完成 TODO。
+// 参考答案：保留原练习契约和测试，可与 main 分支对照学习。
 // 禁止用 STL 排序代替练习；int 用例只检验结果，不检验稳定性，稳定性需结合相等记录的相对次序理解。
 #include "common.h"
 
@@ -10,13 +10,16 @@
 /** 将当前元素插入前方有序区；时间 O(n^2)，空间 O(1)，稳定。 n>=0；升序原地输出；n=0 时允许 a=nullptr。 */
 void InsertSort(int a[], int n);
 
-// --- 在此处编写实现 ---
+// --- 参考实现 ---
 void InsertSort(int a[], int n) {
-    // TODO: 将当前元素插入前方有序区；时间 O(n^2)，空间 O(1)，稳定。 n>=0；升序原地输出；n=0 时允许 a=nullptr。
-    (void)a; (void)n;
+    for (int i = 1; i < n; ++i) {
+        int value = a[i], j = i-1;
+        while (j >= 0 && a[j] > value) { a[j+1] = a[j]; --j; }
+        a[j+1] = value;
+    }
 }
 
-// --- 测试入口：未实现时出现 FAIL 是正常现象 ---
+// --- 测试入口 ---
 int main() {
     printf("--- 直接插入排序 ---\n");
 

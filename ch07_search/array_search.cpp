@@ -1,5 +1,5 @@
 // 练习：顺序查找与折半查找
-// 只提供契约、桩函数和测试；请自行完成 TODO。
+// 参考答案：保留原练习契约和测试，可与 main 分支对照学习。
 // 数组长度由调用者保证；n=0 时允许 a=nullptr；所有返回值均为 0 基下标。
 #include "common.h"
 
@@ -16,23 +16,35 @@ int BinarySearch(const int a[], int n, int key);
 /** 非递减数组中首个 >=key 的下标；全小于 key 返回 n；用折半查找。 */
 int LowerBound(const int a[], int n, int key);
 
-// --- 在此处编写实现 ---
+// --- 参考实现 ---
 int SequentialSearch(const int a[], int n, int key) {
-    // TODO: 返回首个匹配值的 0 基下标；未找到返回 -1；n>=0。
+    for (int i = 0; i < n; ++i) if (a[i] == key) return i;
     return -1;
 }
 
 int BinarySearch(const int a[], int n, int key) {
-    // TODO: a 非递减有序，迭代折半查找；重复值返回任一匹配下标，未找到返回 -1。
+    int low = 0, high = n-1;
+    while (low <= high) {
+        int mid = low + (high-low)/2;
+        if (a[mid] == key) return mid;
+        if (a[mid] < key) low = mid+1;
+        else high = mid-1;
+    }
     return -1;
 }
 
 int LowerBound(const int a[], int n, int key) {
-    // TODO: 非递减数组中首个 >=key 的下标；全小于 key 返回 n；用折半查找。
-    return -1;
+    // 左闭右开区间 [low,high)，始终保留第一个 >= key 的位置。
+    int low = 0, high = n;
+    while (low < high) {
+        int mid = low + (high-low)/2;
+        if (a[mid] < key) low = mid+1;
+        else high = mid;
+    }
+    return low;
 }
 
-// --- 测试入口：未实现时出现 FAIL 是正常现象 ---
+// --- 测试入口 ---
 int main() {
     printf("--- 顺序查找与折半查找 ---\n");
 

@@ -1,5 +1,5 @@
 // 练习：快速排序
-// 只提供契约、桩函数和测试；请自行完成 TODO。
+// 参考答案：保留原练习契约和测试，可与 main 分支对照学习。
 // 禁止用 STL 排序代替练习；int 用例只检验结果，不检验稳定性，稳定性需结合相等记录的相对次序理解。
 #include "common.h"
 
@@ -13,18 +13,37 @@ int Partition(int a[], int low, int high);
 /** 自行编写划分，再递归排序左右区间；注意重复关键字与递归终止；不稳定。 n>=0；升序原地输出；n=0 时允许 a=nullptr。 */
 void QuickSort(int a[], int n);
 
-// --- 在此处编写实现 ---
+static void QuickRange(int a[], int low, int high) {
+    // 只递归较短区间，较长区间循环处理，使递归栈保持 O(log n)。
+    // 首元素枢轴仍可能造成 O(n^2) 时间，属于此基础划分策略的特性。
+    while (low < high) {
+        int pivot = Partition(a,low,high);
+        if (pivot-low < high-pivot) {
+            QuickRange(a,low,pivot-1); low = pivot+1;
+        } else {
+            QuickRange(a,pivot+1,high); high = pivot-1;
+        }
+    }
+}
+
+// --- 参考实现 ---
 int Partition(int a[], int low, int high) {
-    // TODO: 闭区间 [low,high]，以首元素为枢轴，完成划分并返回枢轴最终下标；调用者保证区间非空。
+    int pivot = a[low];
+    while (low < high) {
+        while (low < high && a[high] >= pivot) --high;
+        a[low] = a[high];
+        while (low < high && a[low] <= pivot) ++low;
+        a[high] = a[low];
+    }
+    a[low] = pivot;
     return low;
 }
 
 void QuickSort(int a[], int n) {
-    // TODO: 自行编写划分，再递归排序左右区间；注意重复关键字与递归终止；不稳定。 n>=0；升序原地输出；n=0 时允许 a=nullptr。
-    (void)a; (void)n;
+    QuickRange(a,0,n-1);
 }
 
-// --- 测试入口：未实现时出现 FAIL 是正常现象 ---
+// --- 测试入口 ---
 int main() {
     printf("--- 快速排序 ---\n");
 

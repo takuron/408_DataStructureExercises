@@ -1,5 +1,5 @@
 // 练习：中序线索二叉树
-// 只提供契约、桩函数和测试；请自行完成 TODO。
+// 参考答案：保留原练习契约和测试，可与 main 分支对照学习。
 // 只对普通树调用一次线索化；测试结点为栈上对象，不要释放；out 容量由调用者保证。
 #include "common.h"
 
@@ -20,28 +20,40 @@ ThreadNode *NextNode(ThreadNode *p);
 /** 不使用递归和栈，利用线索中序遍历；返回写入 out 的元素数。 */
 int InOrderThread(ThreadNode *root, int out[]);
 
-// --- 在此处编写实现 ---
+// prev 始终保存刚访问的结点；只递归真实孩子，不能沿线索递归。
+static void ThreadInOrder(ThreadNode *p, ThreadNode *&prev) {
+    if (!p) return;
+    ThreadInOrder(p->lchild, prev);
+    if (!p->lchild) { p->ltag = 1; p->lchild = prev; }
+    if (prev && !prev->rchild) { prev->rtag = 1; prev->rchild = p; }
+    prev = p;
+    ThreadInOrder(p->rchild, prev);
+}
+
+// --- 参考实现 ---
 void CreateInThread(ThreadNode *root) {
-    // TODO: 将普通二叉树中序线索化；初始 tag 均为 0；首结点前驱、末结点后继置空且 tag=1。
-    (void)root;
+    ThreadNode *prev = nullptr;
+    ThreadInOrder(root, prev);
+    if (prev) { prev->rtag = 1; prev->rchild = nullptr; }
 }
 
 ThreadNode *FirstNode(ThreadNode *p) {
-    // TODO: 返回以 p 为根子树的中序首结点；空树返回 nullptr。
-    return nullptr;
+    while (p && p->ltag == 0 && p->lchild) p = p->lchild;
+    return p;
 }
 
 ThreadNode *NextNode(ThreadNode *p) {
-    // TODO: 在线索化树中求中序后继；末结点或空指针返回 nullptr。
-    return nullptr;
+    if (!p) return nullptr;
+    return p->rtag == 1 ? p->rchild : FirstNode(p->rchild);
 }
 
 int InOrderThread(ThreadNode *root, int out[]) {
-    // TODO: 不使用递归和栈，利用线索中序遍历；返回写入 out 的元素数。
-    return 0;
+    int n = 0;
+    for (ThreadNode *p = FirstNode(root); p; p = NextNode(p)) out[n++] = p->data;
+    return n;
 }
 
-// --- 测试入口：未实现时出现 FAIL 是正常现象 ---
+// --- 测试入口 ---
 int main() {
     printf("--- 中序线索二叉树 ---\n");
 

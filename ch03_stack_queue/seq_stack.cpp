@@ -32,32 +32,33 @@ bool GetTop(SqStack S, int &x);
 
 
 // ==========================================
-// [在此处编写你的实现代码]
+// 参考实现
 // ==========================================
 
 void InitStack(SqStack &S) {
-    // TODO
     S.top = -1;
 }
 
 bool StackEmpty(SqStack S) {
-    // TODO
     return S.top == -1;
 }
 
 bool Push(SqStack &S, int x) {
-    // TODO: 判满、入栈
-    return false;
+    if (S.top == MaxSize-1) return false;
+    S.data[++S.top] = x;
+    return true;
 }
 
 bool Pop(SqStack &S, int &x) {
-    // TODO: 判空、出栈
-    return false;
+    if (StackEmpty(S)) return false;
+    x = S.data[S.top--];
+    return true;
 }
 
 bool GetTop(SqStack S, int &x) {
-    // TODO: 判空、读栈顶
-    return false;
+    if (StackEmpty(S)) return false;
+    x = S.data[S.top];
+    return true;
 }
 
 

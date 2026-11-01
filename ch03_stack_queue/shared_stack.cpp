@@ -1,5 +1,5 @@
 // 练习：共享栈
-// 只提供契约、桩函数和测试；请自行完成 TODO。
+// 参考答案：保留原练习契约和测试，可与 main 分支对照学习。
 // 失败操作不得改变原结构或输出参数；动态申请的空间需在销毁时释放。
 #include "common.h"
 
@@ -16,23 +16,30 @@ bool Push(SharedStack &S, int id, int x);
 /** 从指定栈弹出；非法 id 或该栈为空返回 false。 */
 bool Pop(SharedStack &S, int id, int &x);
 
-// --- 在此处编写实现 ---
+// --- 参考实现 ---
 void InitStack(SharedStack &S) {
-    // TODO: 0 号栈从左向右，1 号栈从右向左；top0=-1、top1=MAX_SIZE。
-    (void)S;
+    S.top0 = -1; S.top1 = MAX_SIZE;
 }
 
 bool Push(SharedStack &S, int id, int x) {
-    // TODO: id 只能为 0 或 1；两栈栈顶相邻则满；失败返回 false。
-    return false;
+    if ((id != 0 && id != 1) || S.top0+1 == S.top1) return false;
+    if (id == 0) S.data[++S.top0] = x;
+    else S.data[--S.top1] = x;
+    return true;
 }
 
 bool Pop(SharedStack &S, int id, int &x) {
-    // TODO: 从指定栈弹出；非法 id 或该栈为空返回 false。
-    return false;
+    if (id == 0) {
+        if (S.top0 == -1) return false;
+        x = S.data[S.top0--];
+    } else if (id == 1) {
+        if (S.top1 == MAX_SIZE) return false;
+        x = S.data[S.top1++];
+    } else return false;
+    return true;
 }
 
-// --- 测试入口：未实现时出现 FAIL 是正常现象 ---
+// --- 测试入口 ---
 int main() {
     printf("--- 共享栈 ---\n");
 

@@ -1,5 +1,5 @@
 // 练习：简单选择排序
-// 只提供契约、桩函数和测试；请自行完成 TODO。
+// 参考答案：保留原练习契约和测试，可与 main 分支对照学习。
 // 禁止用 STL 排序代替练习；int 用例只检验结果，不检验稳定性，稳定性需结合相等记录的相对次序理解。
 #include "common.h"
 
@@ -10,13 +10,16 @@
 /** 每趟选取剩余区间最小值，与有序区后第一个位置交换；不稳定。 n>=0；升序原地输出；n=0 时允许 a=nullptr。 */
 void SelectSort(int a[], int n);
 
-// --- 在此处编写实现 ---
+// --- 参考实现 ---
 void SelectSort(int a[], int n) {
-    // TODO: 每趟选取剩余区间最小值，与有序区后第一个位置交换；不稳定。 n>=0；升序原地输出；n=0 时允许 a=nullptr。
-    (void)a; (void)n;
+    for (int i = 0; i < n-1; ++i) {
+        int smallest = i;
+        for (int j = i+1; j < n; ++j) if (a[j] < a[smallest]) smallest = j;
+        if (smallest != i) { int t = a[i]; a[i] = a[smallest]; a[smallest] = t; }
+    }
 }
 
-// --- 测试入口：未实现时出现 FAIL 是正常现象 ---
+// --- 测试入口 ---
 int main() {
     printf("--- 简单选择排序 ---\n");
 

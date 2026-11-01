@@ -1,5 +1,5 @@
 // 练习：二路归并排序
-// 只提供契约、桩函数和测试；请自行完成 TODO。
+// 参考答案：保留原练习契约和测试，可与 main 分支对照学习。
 // 禁止用 STL 排序代替练习；int 用例只检验结果，不检验稳定性，稳定性需结合相等记录的相对次序理解。
 #include "common.h"
 
@@ -13,18 +13,30 @@ void Merge(int a[], int temp[], int low, int mid, int high);
 /** 递归划分后借助辅助数组合并；相等时先取左边保证稳定；空间 O(n)。 n>=0；升序原地输出；n=0 时允许 a=nullptr。 */
 void MergeSort(int a[], int n);
 
-// --- 在此处编写实现 ---
+static void MergeRange(int a[], int temp[], int low, int high) {
+    if (low >= high) return;
+    int mid = low + (high-low)/2;
+    MergeRange(a,temp,low,mid); MergeRange(a,temp,mid+1,high);
+    Merge(a,temp,low,mid,high);
+}
+
+// --- 参考实现 ---
 void Merge(int a[], int temp[], int low, int mid, int high) {
-    // TODO: 两个有序闭区间 [low,mid]、[mid+1,high] 合并，借助 temp 并写回 a；temp 至少 n 格。
-    (void)a; (void)temp; (void)low; (void)mid; (void)high;
+    int i = low, j = mid+1, k = low;
+    while (i <= mid && j <= high) temp[k++] = a[i] <= a[j] ? a[i++] : a[j++];
+    while (i <= mid) temp[k++] = a[i++];
+    while (j <= high) temp[k++] = a[j++];
+    for (k = low; k <= high; ++k) a[k] = temp[k];
 }
 
 void MergeSort(int a[], int n) {
-    // TODO: 递归划分后借助辅助数组合并；相等时先取左边保证稳定；空间 O(n)。 n>=0；升序原地输出；n=0 时允许 a=nullptr。
-    (void)a; (void)n;
+    if (n < 2) return;
+    int *temp = new int[n];
+    MergeRange(a,temp,0,n-1);
+    delete[] temp;
 }
 
-// --- 测试入口：未实现时出现 FAIL 是正常现象 ---
+// --- 测试入口 ---
 int main() {
     printf("--- 二路归并排序 ---\n");
 

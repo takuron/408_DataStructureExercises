@@ -1,5 +1,5 @@
 // 练习：Dijkstra 与 Floyd 最短路径
-// 只提供契约、桩函数和测试；请自行完成 TODO。
+// 参考答案：保留原练习契约和测试，可与 main 分支对照学习。
 // 失败操作不得改变原结构或输出参数；动态申请的空间需在销毁时释放。
 #include "common.h"
 
@@ -16,18 +16,41 @@ bool Dijkstra(const Graph &G, int source, int dist[], int parent[]);
 /** 输出所有顶点对距离；允许负边但约定无负环；INF 不可直接参与相加。 */
 void Floyd(const Graph &G, int dist[][VMAX]);
 
-// --- 在此处编写实现 ---
+// --- 参考实现 ---
 bool Dijkstra(const Graph &G, int source, int dist[], int parent[]) {
-    // TODO: 有向非负权图；输出距离及前驱，源前驱/不可达前驱 -1，不可达距离 INF；非法源返回 false。
-    return false;
+    if (source < 0 || source >= G.n) return false;
+    bool selected[VMAX] = {};
+    for (int v = 0; v < G.n; ++v) { dist[v] = INF; parent[v] = -1; }
+    dist[source] = 0;
+    for (int i = 0; i < G.n; ++i) {
+        int u = -1;
+        for (int v = 0; v < G.n; ++v)
+            if (!selected[v] && (u == -1 || dist[v] < dist[u])) u = v;
+        if (u == -1 || dist[u] == INF) break;
+        selected[u] = true;
+        for (int v = 0; v < G.n; ++v) {
+            if (selected[v] || G.w[u][v] == INF) continue;
+            if (dist[u] + G.w[u][v] < dist[v]) {
+                dist[v] = dist[u] + G.w[u][v]; parent[v] = u;
+            }
+        }
+    }
+    return true;
 }
 
 void Floyd(const Graph &G, int dist[][VMAX]) {
-    // TODO: 输出所有顶点对距离；允许负边但约定无负环；INF 不可直接参与相加。
-    (void)G; (void)dist;
+    for (int i = 0; i < G.n; ++i)
+        for (int j = 0; j < G.n; ++j) dist[i][j] = G.w[i][j];
+    // 中转点 k 必须放在最外层。
+    for (int k = 0; k < G.n; ++k)
+        for (int i = 0; i < G.n; ++i)
+            for (int j = 0; j < G.n; ++j)
+                if (dist[i][k] != INF && dist[k][j] != INF &&
+                    dist[i][k] + dist[k][j] < dist[i][j])
+                    dist[i][j] = dist[i][k] + dist[k][j];
 }
 
-// --- 测试入口：未实现时出现 FAIL 是正常现象 ---
+// --- 测试入口 ---
 int main() {
     printf("--- Dijkstra 与 Floyd 最短路径 ---\n");
     Graph G{}; G.n = 4;

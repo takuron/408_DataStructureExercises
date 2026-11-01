@@ -1,5 +1,5 @@
 // 练习：堆排序
-// 只提供契约、桩函数和测试；请自行完成 TODO。
+// 参考答案：保留原练习契约和测试，可与 main 分支对照学习。
 // 禁止用 STL 排序代替练习；int 用例只检验结果，不检验稳定性，稳定性需结合相等记录的相对次序理解。
 #include "common.h"
 
@@ -13,18 +13,26 @@ void SiftDown(int a[], int root, int size);
 /** 0 基数组建大根堆，反复交换堆顶与末尾并向下调整；不稳定，空间 O(1)。 n>=0；升序原地输出；n=0 时允许 a=nullptr。 */
 void HeapSort(int a[], int n);
 
-// --- 在此处编写实现 ---
+// --- 参考实现 ---
 void SiftDown(int a[], int root, int size) {
-    // TODO: 在 [0,size) 中向下调整大根堆；root 的左右子树已是堆；孩子下标 2*root+1、2*root+2。
-    (void)a; (void)root; (void)size;
+    int value = a[root];
+    for (int child = 2*root+1; child < size; child = 2*root+1) {
+        if (child+1 < size && a[child+1] > a[child]) ++child;
+        if (value >= a[child]) break;
+        a[root] = a[child]; root = child;
+    }
+    a[root] = value;
 }
 
 void HeapSort(int a[], int n) {
-    // TODO: 0 基数组建大根堆，反复交换堆顶与末尾并向下调整；不稳定，空间 O(1)。 n>=0；升序原地输出；n=0 时允许 a=nullptr。
-    (void)a; (void)n;
+    for (int i = n/2-1; i >= 0; --i) SiftDown(a,i,n);
+    for (int end = n-1; end > 0; --end) {
+        int t = a[0]; a[0] = a[end]; a[end] = t;
+        SiftDown(a,0,end);
+    }
 }
 
-// --- 测试入口：未实现时出现 FAIL 是正常现象 ---
+// --- 测试入口 ---
 int main() {
     printf("--- 堆排序 ---\n");
 

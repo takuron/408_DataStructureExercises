@@ -1,5 +1,5 @@
 // 练习：动态顺序表
-// 只提供契约、桩函数和测试；请自行完成 TODO。
+// 参考答案：保留原练习契约和测试，可与 main 分支对照学习。
 // 失败操作不得改变原结构或输出参数；动态申请的空间需在销毁时释放。
 #include "common.h"
 
@@ -25,38 +25,55 @@ int LocateElem(const SeqList &L, int e);
 /** 释放 data，指针置空，length 和 capacity 置零；允许重复销毁。 */
 void DestroyList(SeqList &L);
 
-// --- 在此处编写实现 ---
+// --- 参考实现 ---
 bool InitList(SeqList &L, int capacity) {
-    // TODO: 申请 capacity 个元素空间；capacity <= 0 或分配失败返回 false；成功后 length=0。
-    return false;
+    if (capacity <= 0) return false;
+    int *data = static_cast<int *>(malloc(sizeof(int) * static_cast<size_t>(capacity)));
+    if (!data) return false;
+    L = {data, 0, capacity};
+    return true;
 }
 
 bool Reserve(SeqList &L, int capacity) {
-    // TODO: 扩容并保留原元素；不缩容；非法容量或分配失败返回 false。
-    return false;
+    if (capacity <= 0) return false;
+    if (capacity <= L.capacity) return true;
+    int *data = static_cast<int *>(realloc(L.data, sizeof(int) * static_cast<size_t>(capacity)));
+    if (!data) return false;
+    L.data = data;
+    L.capacity = capacity;
+    return true;
 }
 
 bool ListInsert(SeqList &L, int i, int e) {
-    // TODO: 在位序 [1,length+1] 插入；满时容量翻倍（先扩容）；非法位序返回 false。
-    return false;
+    if (i < 1 || i > L.length + 1 || !L.data) return false;
+    if (L.length == L.capacity) {
+        if (L.capacity > 2147483647 / 2 || !Reserve(L, L.capacity * 2)) return false;
+    }
+    for (int j = L.length; j >= i; --j) L.data[j] = L.data[j-1];
+    L.data[i-1] = e;
+    ++L.length;
+    return true;
 }
 
 bool ListDelete(SeqList &L, int i, int &e) {
-    // TODO: 删除位序 [1,length] 的元素，由 e 带回；非法位序返回 false。
-    return false;
+    if (i < 1 || i > L.length) return false;
+    e = L.data[i-1];
+    for (int j = i; j < L.length; ++j) L.data[j-1] = L.data[j];
+    --L.length;
+    return true;
 }
 
 int LocateElem(const SeqList &L, int e) {
-    // TODO: 返回第一个匹配值的位序；未找到返回 0。
+    for (int j = 0; j < L.length; ++j) if (L.data[j] == e) return j+1;
     return 0;
 }
 
 void DestroyList(SeqList &L) {
-    // TODO: 释放 data，指针置空，length 和 capacity 置零；允许重复销毁。
-    (void)L;
+    free(L.data);
+    L = {nullptr, 0, 0};
 }
 
-// --- 测试入口：未实现时出现 FAIL 是正常现象 ---
+// --- 测试入口 ---
 int main() {
     printf("--- 动态顺序表 ---\n");
 

@@ -1,5 +1,5 @@
 // 练习：定长顺序串的基本操作
-// 只提供契约、桩函数和测试；请自行完成 TODO。
+// 参考答案：保留原练习契约和测试，可与 main 分支对照学习。
 // 失败操作不得改变原结构或输出参数；动态申请的空间需在销毁时释放。
 #include "common.h"
 
@@ -20,28 +20,48 @@ bool Concat(SString &out, const SString &a, const SString &b);
 /** pos 为 0 基下标；0<=pos<=length、0<=len<=length-pos；支持别名；失败返回 false。 */
 bool SubString(SString &out, const SString &s, int pos, int len);
 
-// --- 在此处编写实现 ---
+// --- 参考实现 ---
 bool StrAssign(SString &s, const char *text) {
-    // TODO: 从 C 字符串赋值；空指针或长度超过 MAX_SIZE 返回 false。
-    return false;
+    if (!text) return false;
+    size_t n = strlen(text);
+    if (n > MAX_SIZE) return false;
+    // memmove 允许 text 来自 s.ch 的重叠区域。
+    memmove(s.ch, text, n+1);
+    s.length = static_cast<int>(n);
+    return true;
 }
 
 int StrCompare(const SString &a, const SString &b) {
-    // TODO: 按字符字典序比较，返回负数/0/正数。
-    return 0;
+    int n = a.length < b.length ? a.length : b.length;
+    for (int i = 0; i < n; ++i) {
+        unsigned char x = static_cast<unsigned char>(a.ch[i]);
+        unsigned char y = static_cast<unsigned char>(b.ch[i]);
+        if (x != y) return x < y ? -1 : 1;
+    }
+    return (a.length > b.length) - (a.length < b.length);
 }
 
 bool Concat(SString &out, const SString &a, const SString &b) {
-    // TODO: 连接两串；超容量返回 false；要求支持 out 与输入为同一对象。
-    return false;
+    if (a.length + b.length > MAX_SIZE) return false;
+    SString temp{};
+    temp.length = a.length + b.length;
+    memcpy(temp.ch, a.ch, a.length);
+    memcpy(temp.ch+a.length, b.ch, b.length);
+    temp.ch[temp.length] = '\0';
+    out = temp;
+    return true;
 }
 
 bool SubString(SString &out, const SString &s, int pos, int len) {
-    // TODO: pos 为 0 基下标；0<=pos<=length、0<=len<=length-pos；支持别名；失败返回 false。
-    return false;
+    if (pos < 0 || pos > s.length || len < 0 || len > s.length-pos) return false;
+    SString temp{};
+    memcpy(temp.ch, s.ch+pos, len);
+    temp.length = len; temp.ch[len] = '\0';
+    out = temp;
+    return true;
 }
 
-// --- 测试入口：未实现时出现 FAIL 是正常现象 ---
+// --- 测试入口 ---
 int main() {
     printf("--- 定长顺序串的基本操作 ---\n");
 

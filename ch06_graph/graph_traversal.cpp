@@ -1,5 +1,5 @@
 // 练习：图的 DFS、BFS 与无权最短路径
-// 只提供契约、桩函数和测试；请自行完成 TODO。
+// 参考答案：保留原练习契约和测试，可与 main 分支对照学习。
 // 合法图：n<=VMAX，edge 为 0/1；允许非连通图；输出数组至少 VMAX 格；每次遍历重置访问标记。
 #include "common.h"
 
@@ -17,23 +17,49 @@ int BFSTraverse(const Graph &G, int out[]);
 /** 单源 BFS；距离按边数，源距离 0；不可达距离和前驱均为 -1，源前驱 -1；非法源返回 false。 */
 bool BFSShortestPath(const Graph &G, int source, int dist[], int parent[]);
 
-// --- 在此处编写实现 ---
+static void DFS(const Graph &G, int u, bool visited[], int out[], int &n) {
+    visited[u] = true; out[n++] = u;
+    for (int v = 0; v < G.n; ++v)
+        if (G.edge[u][v] && !visited[v]) DFS(G,v,visited,out,n);
+}
+
+// --- 参考实现 ---
 int DFSTraverse(const Graph &G, int out[]) {
-    // TODO: 递归 DFS 遍历整个图；起点和邻接点均按下标递增选择；返回输出顶点数。
-    return 0;
+    bool visited[VMAX] = {}; int n = 0;
+    for (int v = 0; v < G.n; ++v) if (!visited[v]) DFS(G,v,visited,out,n);
+    return n;
 }
 
 int BFSTraverse(const Graph &G, int out[]) {
-    // TODO: 用手写队列 BFS 遍历整个图；入队时标记；按下标递增选择；返回输出数。
-    return 0;
+    bool visited[VMAX] = {}; int queue[VMAX], n = 0;
+    for (int start = 0; start < G.n; ++start) if (!visited[start]) {
+        int front = 0, rear = 0;
+        queue[rear++] = start; visited[start] = true;
+        while (front < rear) {
+            int u = queue[front++]; out[n++] = u;
+            for (int v = 0; v < G.n; ++v) if (G.edge[u][v] && !visited[v]) {
+                visited[v] = true; queue[rear++] = v;
+            }
+        }
+    }
+    return n;
 }
 
 bool BFSShortestPath(const Graph &G, int source, int dist[], int parent[]) {
-    // TODO: 单源 BFS；距离按边数，源距离 0；不可达距离和前驱均为 -1，源前驱 -1；非法源返回 false。
-    return false;
+    if (source < 0 || source >= G.n) return false;
+    for (int v = 0; v < G.n; ++v) dist[v] = parent[v] = -1;
+    int queue[VMAX], front = 0, rear = 0;
+    dist[source] = 0; queue[rear++] = source;
+    while (front < rear) {
+        int u = queue[front++];
+        for (int v = 0; v < G.n; ++v) if (G.edge[u][v] && dist[v] == -1) {
+            dist[v] = dist[u]+1; parent[v] = u; queue[rear++] = v;
+        }
+    }
+    return true;
 }
 
-// --- 测试入口：未实现时出现 FAIL 是正常现象 ---
+// --- 测试入口 ---
 int main() {
     printf("--- 图的 DFS、BFS 与无权最短路径 ---\n");
 

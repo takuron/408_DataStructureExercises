@@ -1,5 +1,5 @@
 // 练习：Prim 与 Kruskal 最小生成树
-// 只提供契约、桩函数和测试；请自行完成 TODO。
+// 参考答案：保留原练习契约和测试，可与 main 分支对照学习。
 // 失败操作不得改变原结构或输出参数；动态申请的空间需在销毁时释放。
 #include "common.h"
 
@@ -16,18 +16,58 @@ bool Prim(const Graph &G, int &total);
 /** 提取无向边，按权递增，用并查集判环；返回约定同 Prim。 */
 bool Kruskal(const Graph &G, int &total);
 
-// --- 在此处编写实现 ---
+static int SetRoot(int parent[], int x) {
+    if (parent[x] < 0) return x;
+    return parent[x] = SetRoot(parent,parent[x]);
+}
+
+// --- 参考实现 ---
 bool Prim(const Graph &G, int &total) {
-    // TODO: 无向非负权图，从顶点 0 开始；连通则 total 带回 MST 权值并返回 true；空图权值 0；不连通返回 false。
-    return false;
+    if (G.n == 0) { total = 0; return true; }
+    int low[VMAX]; bool selected[VMAX] = {}; int sum = 0;
+    for (int v = 0; v < G.n; ++v) low[v] = INF;
+    low[0] = 0;
+    for (int i = 0; i < G.n; ++i) {
+        int u = -1;
+        for (int v = 0; v < G.n; ++v)
+            if (!selected[v] && (u == -1 || low[v] < low[u])) u = v;
+        if (u == -1 || low[u] == INF) return false;
+        selected[u] = true; sum += low[u];
+        for (int v = 0; v < G.n; ++v)
+            if (!selected[v] && G.w[u][v] < low[v]) low[v] = G.w[u][v];
+    }
+    total = sum;
+    return true;
 }
 
 bool Kruskal(const Graph &G, int &total) {
-    // TODO: 提取无向边，按权递增，用并查集判环；返回约定同 Prim。
-    return false;
+    struct Edge { int u, v, w; } edges[VMAX*(VMAX-1)/2];
+    int count = 0;
+    for (int u = 0; u < G.n; ++u)
+        for (int v = u+1; v < G.n; ++v)
+            if (G.w[u][v] != INF) edges[count++] = {u,v,G.w[u][v]};
+    // 手写插入排序，避免依赖 STL 算法。
+    for (int i = 1; i < count; ++i) {
+        Edge e = edges[i]; int j = i-1;
+        while (j >= 0 && edges[j].w > e.w) { edges[j+1] = edges[j]; --j; }
+        edges[j+1] = e;
+    }
+    int parent[VMAX];
+    for (int i = 0; i < G.n; ++i) parent[i] = -1;
+    int selected = 0, sum = 0;
+    for (int i = 0; i < count && selected < G.n-1; ++i) {
+        int a = SetRoot(parent,edges[i].u), b = SetRoot(parent,edges[i].v);
+        if (a == b) continue;
+        if (parent[a] > parent[b]) { int t = a; a = b; b = t; }
+        parent[a] += parent[b]; parent[b] = a;
+        sum += edges[i].w; ++selected;
+    }
+    if (G.n > 0 && selected != G.n-1) return false;
+    total = sum;
+    return true;
 }
 
-// --- 测试入口：未实现时出现 FAIL 是正常现象 ---
+// --- 测试入口 ---
 int main() {
     printf("--- Prim 与 Kruskal 最小生成树 ---\n");
     Graph G{}; G.n = 4;

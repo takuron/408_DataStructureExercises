@@ -25,7 +25,7 @@ void PostOrder(BiTree T);
 
 
 // ==========================================
-// [在此处编写你的实现代码]
+// 参考实现
 // ==========================================
 
 void visit(BiNode *p) {
@@ -33,7 +33,6 @@ void visit(BiNode *p) {
 }
 
 void PreOrder(BiTree T) {
-    // TODO
     if (T == nullptr) return;
     visit(T);
     PreOrder(T->lchild);
@@ -41,7 +40,6 @@ void PreOrder(BiTree T) {
 }
 
 void InOrder(BiTree T) {
-    // TODO
     if (T == nullptr) return;
     InOrder(T->lchild);
     visit(T);
@@ -49,7 +47,6 @@ void InOrder(BiTree T) {
 }
 
 void PostOrder(BiTree T) {
-    // TODO
     if (T == nullptr) return;
     PostOrder(T->lchild);
     PostOrder(T->rchild);

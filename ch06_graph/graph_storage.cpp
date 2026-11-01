@@ -1,5 +1,5 @@
 // 练习：图的邻接矩阵与邻接表
-// 只提供契约、桩函数和测试；请自行完成 TODO。
+// 参考答案：保留原练习契约和测试，可与 main 分支对照学习。
 // 失败操作不得改变原结构或输出参数；动态申请的空间需在销毁时释放。
 #include "common.h"
 
@@ -26,33 +26,47 @@ int Degree(const ALGraph &G, int v);
 /** 释放所有弧结点，清空 head，n 和 m 置零。 */
 void DestroyGraph(ALGraph &G);
 
-// --- 在此处编写实现 ---
+// --- 参考实现 ---
 bool InitGraph(MGraph &G, int n) {
-    // TODO: n 范围 [0,VMAX]；清空矩阵，设置顶点数，边数置零。
-    return false;
+    if (n < 0 || n > VMAX) return false;
+    G = {}; G.n = n;
+    return true;
 }
 
 bool AddEdge(MGraph &G, int u, int v) {
-    // TODO: 顶点为 0 基下标；插入无向边并更新边数；越界、自环、重边返回 false。
-    return false;
+    if (u < 0 || u >= G.n || v < 0 || v >= G.n || u == v || G.edge[u][v]) return false;
+    G.edge[u][v] = G.edge[v][u] = 1; ++G.m;
+    return true;
 }
 
 bool ToAdjList(const MGraph &G, ALGraph &A) {
-    // TODO: 向空邻接表 A 转换；每条无向边存两条弧；分配失败清理部分结果并返回 false。
-    return false;
+    ALGraph temp{}; temp.n = G.n; temp.m = G.m;
+    for (int u = 0; u < G.n; ++u) {
+        // 头插时按下标降序扫描，使最终链表按下标递增。
+        for (int v = G.n-1; v >= 0; --v) if (G.edge[u][v]) {
+            ArcNode *p = static_cast<ArcNode *>(malloc(sizeof(ArcNode)));
+            if (!p) { DestroyGraph(temp); return false; }
+            *p = {v, temp.head[u]}; temp.head[u] = p;
+        }
+    }
+    A = temp;
+    return true;
 }
 
 int Degree(const ALGraph &G, int v) {
-    // TODO: 返回顶点度数；非法下标返回 -1。
-    return -1;
+    if (v < 0 || v >= G.n) return -1;
+    int degree = 0;
+    for (ArcNode *p = G.head[v]; p; p = p->next) ++degree;
+    return degree;
 }
 
 void DestroyGraph(ALGraph &G) {
-    // TODO: 释放所有弧结点，清空 head，n 和 m 置零。
-    (void)G;
+    for (int u = 0; u < G.n; ++u)
+        while (G.head[u]) { ArcNode *p = G.head[u]; G.head[u] = p->next; free(p); }
+    G = {};
 }
 
-// --- 测试入口：未实现时出现 FAIL 是正常现象 ---
+// --- 测试入口 ---
 int main() {
     printf("--- 图的邻接矩阵与邻接表 ---\n");
 

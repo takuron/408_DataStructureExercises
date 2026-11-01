@@ -1,5 +1,5 @@
 // 练习：冒泡排序
-// 只提供契约、桩函数和测试；请自行完成 TODO。
+// 参考答案：保留原练习契约和测试，可与 main 分支对照学习。
 // 禁止用 STL 排序代替练习；int 用例只检验结果，不检验稳定性，稳定性需结合相等记录的相对次序理解。
 #include "common.h"
 
@@ -10,13 +10,18 @@
 /** 相邻逆序元素交换；一趟无交换时提前结束；稳定。 n>=0；升序原地输出；n=0 时允许 a=nullptr。 */
 void BubbleSort(int a[], int n);
 
-// --- 在此处编写实现 ---
+// --- 参考实现 ---
 void BubbleSort(int a[], int n) {
-    // TODO: 相邻逆序元素交换；一趟无交换时提前结束；稳定。 n>=0；升序原地输出；n=0 时允许 a=nullptr。
-    (void)a; (void)n;
+    for (int end = n-1; end > 0; --end) {
+        bool swapped = false;
+        for (int j = 0; j < end; ++j) if (a[j] > a[j+1]) {
+            int t = a[j]; a[j] = a[j+1]; a[j+1] = t; swapped = true;
+        }
+        if (!swapped) break;
+    }
 }
 
-// --- 测试入口：未实现时出现 FAIL 是正常现象 ---
+// --- 测试入口 ---
 int main() {
     printf("--- 冒泡排序 ---\n");
 

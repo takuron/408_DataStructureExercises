@@ -1,5 +1,5 @@
 // 练习：并查集（路径压缩、按规模合并）
-// 只提供契约、桩函数和测试；请自行完成 TODO。
+// 参考答案：保留原练习契约和测试，可与 main 分支对照学习。
 // 失败操作不得改变原结构或输出参数；动态申请的空间需在销毁时释放。
 #include "common.h"
 
@@ -17,23 +17,36 @@ int Find(DSU &S, int x);
 /** 按集合规模合并；同集合或非法下标返回 false，成功合并返回 true。 */
 bool Union(DSU &S, int a, int b);
 
-// --- 在此处编写实现 ---
+// --- 参考实现 ---
 bool InitSet(DSU &S, int n) {
-    // TODO: 初始化 n 个单元素集合；n 范围 [0,MAX_SIZE]，非法返回 false。
-    return false;
+    if (n < 0 || n > MAX_SIZE) return false;
+    S.n = n;
+    for (int i = 0; i < n; ++i) S.parent[i] = -1;
+    return true;
 }
 
 int Find(DSU &S, int x) {
-    // TODO: 查找根并压缩路径；非法下标返回 -1。
-    return -1;
+    if (x < 0 || x >= S.n) return -1;
+    if (S.parent[x] < 0) return x;
+    return S.parent[x] = Find(S, S.parent[x]);
 }
 
 bool Union(DSU &S, int a, int b) {
-    // TODO: 按集合规模合并；同集合或非法下标返回 false，成功合并返回 true。
-    return false;
+    if (a < 0 || a >= S.n || b < 0 || b >= S.n) return false;
+    // 先只读查根，使“已在同一集合”的失败操作不改变 parent 数组。
+    int ra = a, rb = b;
+    while (S.parent[ra] >= 0) ra = S.parent[ra];
+    while (S.parent[rb] >= 0) rb = S.parent[rb];
+    if (ra == rb) return false;
+    Find(S,a); Find(S,b);
+    // 负数的绝对值越大，集合越大；保证 ra 为较大集合。
+    if (S.parent[ra] > S.parent[rb]) { int t = ra; ra = rb; rb = t; }
+    S.parent[ra] += S.parent[rb];
+    S.parent[rb] = ra;
+    return true;
 }
 
-// --- 测试入口：未实现时出现 FAIL 是正常现象 ---
+// --- 测试入口 ---
 int main() {
     printf("--- 并查集（路径压缩、按规模合并） ---\n");
 
