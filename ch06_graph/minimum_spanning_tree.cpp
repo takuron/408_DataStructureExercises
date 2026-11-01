@@ -7,7 +7,10 @@
 constexpr int VMAX = 20;
 constexpr int INF = 0x3f3f3f3f;
 // 对角线 0；无边 INF；0 权边合法。测试用权值总和小于 INF。
-struct Graph { int w[VMAX][VMAX]; int n; };
+typedef struct Graph {
+    int w[VMAX][VMAX];
+    int n;
+} Graph;
 
 // --- 函数声明与行为契约 ---
 /** 无向非负权图，从顶点 0 开始；连通则 total 带回 MST 权值并返回 true；空图权值 0；不连通返回 false。 */

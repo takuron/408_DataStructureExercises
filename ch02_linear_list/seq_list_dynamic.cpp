@@ -5,7 +5,11 @@
 #include <cstdlib>
 
 // --- 数据结构定义 ---
-struct SeqList { int *data; int length; int capacity; };
+typedef struct SeqList {
+    int *data;
+    int length;
+    int capacity;
+} SeqList;
 
 // --- 函数声明与行为契约 ---
 /** 申请 capacity 个元素空间；capacity <= 0 或分配失败返回 false；成功后 length=0。 */
