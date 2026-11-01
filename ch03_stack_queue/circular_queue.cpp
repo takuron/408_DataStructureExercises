@@ -4,7 +4,10 @@
 #include "common.h"
 
 // --- 数据结构定义 ---
-struct SqQueue { int data[MAX_SIZE]; int front, rear; };
+typedef struct SqQueue {
+    int data[MAX_SIZE];
+    int front, rear;
+} SqQueue;
 
 // --- 函数声明与行为契约 ---
 /** front 和 rear 均置零；rear 指向下一次入队的位置。 */

@@ -5,7 +5,9 @@
 
 // --- 数据结构定义 ---
 // 0 基：前 n 项是叶子，后 n-1 项是内部结点；-1 表示无父/孩子。
-struct HNode { int weight, parent, left, right; };
+typedef struct HNode {
+    int weight, parent, left, right;
+} HNode;
 
 // --- 函数声明与行为契约 ---
 /** n 范围 [1,MAX_SIZE]，权值为正；构造 2*n-1 个结点，根下标 2*n-2；非法输入返回 false。 */

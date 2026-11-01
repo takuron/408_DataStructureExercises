@@ -4,8 +4,13 @@
 #include "common.h"
 
 // --- 数据结构定义 ---
-struct QNode { int data; QNode *next; };
-struct LinkQueue { QNode *front, *rear; };
+typedef struct QNode {
+    int data;
+    struct QNode *next;
+} QNode;
+typedef struct LinkQueue {
+    QNode *front, *rear;
+} LinkQueue;
 
 // --- 函数声明与行为契约 ---
 /** 申请头结点，front=rear，next=nullptr；分配失败返回 false。 */

@@ -5,7 +5,10 @@
 
 // --- 数据结构定义 ---
 // 下标从 0 开始；length 不包含终止符；保留一位存放 \0。
-struct SString { char ch[MAX_SIZE + 1]; int length; };
+typedef struct SString {
+    char ch[MAX_SIZE + 1];
+    int length;
+} SString;
 
 // --- 函数声明与行为契约 ---
 /** 从 C 字符串赋值；空指针或长度超过 MAX_SIZE 返回 false。 */

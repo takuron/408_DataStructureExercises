@@ -5,7 +5,10 @@
 
 // --- 数据结构定义 ---
 // 根的 parent 为负数，绝对值为集合规模；非根保存父下标。
-struct DSU { int parent[MAX_SIZE]; int n; };
+typedef struct DSU {
+    int parent[MAX_SIZE];
+    int n;
+} DSU;
 
 // --- 函数声明与行为契约 ---
 /** 初始化 n 个单元素集合；n 范围 [0,MAX_SIZE]，非法返回 false。 */

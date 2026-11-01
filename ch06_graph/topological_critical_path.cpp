@@ -6,7 +6,10 @@
 // --- 数据结构定义 ---
 constexpr int VMAX = 20;
 // AOE 网：-1 无边，>=0 表示活动持续时间（允许零）；对角线 -1。
-struct DAG { int weight[VMAX][VMAX]; int n; };
+typedef struct DAG {
+    int weight[VMAX][VMAX];
+    int n;
+} DAG;
 
 // --- 函数声明与行为契约 ---
 /** Kahn 算法；每轮选最小的零入度顶点；返回输出数，有环时小于 n；不修改 G。 */

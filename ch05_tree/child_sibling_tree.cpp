@@ -5,7 +5,10 @@
 
 // --- 数据结构定义 ---
 // firstChild 指向第一个孩子，nextSibling 指向下一个兄弟。
-struct CSNode { char data; CSNode *firstChild, *nextSibling; };
+typedef struct CSNode {
+    char data;
+    struct CSNode *firstChild, *nextSibling;
+} CSNode;
 
 // --- 函数声明与行为契约 ---
 /** 树/森林先根遍历（等价于对应二叉树先序）；写入 out，返回元素数。 */

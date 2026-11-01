@@ -4,8 +4,11 @@
 #include "common.h"
 
 // --- 数据结构定义 ---
-struct SNode { int data; SNode *next; };
-using LinkStack = SNode *;
+typedef struct SNode {
+    int data;
+    struct SNode *next;
+} SNode;
+typedef SNode *LinkStack;
 
 // --- 函数声明与行为契约 ---
 /** 空指针表示空栈。 */

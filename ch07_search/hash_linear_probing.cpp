@@ -5,8 +5,11 @@
 
 // --- 数据结构定义 ---
 constexpr int TABLE_SIZE = 11;
-enum SlotState { EMPTY, OCCUPIED, DELETED };
-struct HashTable { int key[TABLE_SIZE]; SlotState state[TABLE_SIZE]; };
+typedef enum SlotState { EMPTY, OCCUPIED, DELETED } SlotState;
+typedef struct HashTable {
+    int key[TABLE_SIZE];
+    SlotState state[TABLE_SIZE];
+} HashTable;
 
 // --- 函数声明与行为契约 ---
 /** 把所有槽标记为 EMPTY；关键字数组无需清零。 */

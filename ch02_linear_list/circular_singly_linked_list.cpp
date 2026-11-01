@@ -4,8 +4,11 @@
 #include "common.h"
 
 // --- 数据结构定义 ---
-struct CNode { int data; CNode *next; };
-using CList = CNode *;
+typedef struct CNode {
+    int data;
+    struct CNode *next;
+} CNode;
+typedef CNode *CList;
 
 // --- 函数声明与行为契约 ---
 /** 申请头结点，next 指向自身；分配失败返回 false。 */

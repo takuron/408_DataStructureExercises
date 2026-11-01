@@ -4,8 +4,11 @@
 #include "common.h"
 
 // --- 数据结构定义 ---
-struct LNode { int data; LNode *next; };
-using LinkList = LNode *;
+typedef struct LNode {
+    int data;
+    struct LNode *next;
+} LNode;
+typedef LNode *LinkList;
 
 // --- 函数声明与行为契约 ---
 /** 创建头结点，next=nullptr；分配失败返回 false。 */
