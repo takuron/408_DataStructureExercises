@@ -5,7 +5,10 @@
 
 // --- 数据结构定义 ---
 // height：空树为 0，叶子为 1；本练习不要求 AVL 删除。
-struct AVLNode { int key, height; AVLNode *left, *right; };
+typedef struct AVLNode {
+    int key, height;
+    struct AVLNode *left, *right;
+} AVLNode;
 
 // --- 函数声明与行为契约 ---
 /** root 的右孩子非空；左旋并更新高度，返回新根。 */

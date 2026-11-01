@@ -4,8 +4,11 @@
 #include "common.h"
 
 // --- 数据结构定义 ---
-struct DNode { int data; DNode *prior, *next; };
-using DLinkList = DNode *;
+typedef struct DNode {
+    int data;
+    struct DNode *prior, *next;
+} DNode;
+typedef DNode *DLinkList;
 
 // --- 函数声明与行为契约 ---
 /** 创建头结点；空表时 prior、next 均指向头结点。 */

@@ -90,3 +90,18 @@ python3 tests/check_answers.py build-sanitize --sanitize
 
 
 本分支仅对应仓库已有练习，未扩展 B/B+ 树、红黑树、AVL 删除或外部排序等题目。建议先在 `main` 独立完成，再按函数查阅参考实现。
+
+
+## 类型定义风格
+
+所有分支统一采用 C 风格的 `typedef` 定义结构体、枚举和指针类型别名，例如：
+
+```c
+typedef struct LNode {
+    int data;
+    struct LNode *next;
+} LNode;
+typedef LNode *LinkList;
+```
+
+结构体内部使用 `struct LNode *` 自引用，因为末尾的 `LNode` 别名尚未声明。文件仍使用 C++14 编译，函数引用参数等接口保持原样。

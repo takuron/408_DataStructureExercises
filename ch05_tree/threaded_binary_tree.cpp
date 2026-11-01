@@ -5,7 +5,11 @@
 
 // --- 数据结构定义 ---
 // tag=0 表示孩子，tag=1 表示线索；无头结点。
-struct ThreadNode { int data; ThreadNode *lchild, *rchild; int ltag, rtag; };
+typedef struct ThreadNode {
+    int data;
+    struct ThreadNode *lchild, *rchild;
+    int ltag, rtag;
+} ThreadNode;
 
 // --- 函数声明与行为契约 ---
 /** 将普通二叉树中序线索化；初始 tag 均为 0；首结点前驱、末结点后继置空且 tag=1。 */

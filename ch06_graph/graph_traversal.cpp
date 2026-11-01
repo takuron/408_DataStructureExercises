@@ -5,7 +5,10 @@
 
 // --- 数据结构定义 ---
 constexpr int VMAX = 20;
-struct Graph { int edge[VMAX][VMAX]; int n; };
+typedef struct Graph {
+    int edge[VMAX][VMAX];
+    int n;
+} Graph;
 
 // --- 函数声明与行为契约 ---
 /** 递归 DFS 遍历整个图；起点和邻接点均按下标递增选择；返回输出顶点数。 */

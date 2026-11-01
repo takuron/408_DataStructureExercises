@@ -4,8 +4,11 @@
 #include "common.h"
 
 // --- 数据结构定义 ---
-struct BiNode { int data; BiNode *lchild, *rchild; };
-using BiTree = BiNode *;
+typedef struct BiNode {
+    int data;
+    struct BiNode *lchild, *rchild;
+} BiNode;
+typedef BiNode *BiTree;
 
 // --- 函数声明与行为契约 ---
 /** 非递归先序遍历，把值依次写入 out，返回结点数；空树返回 0。 */

@@ -4,7 +4,10 @@
 #include "common.h"
 
 // --- 数据结构定义 ---
-struct SharedStack { int data[MAX_SIZE]; int top0, top1; };
+typedef struct SharedStack {
+    int data[MAX_SIZE];
+    int top0, top1;
+} SharedStack;
 
 // --- 函数声明与行为契约 ---
 /** 0 号栈从左向右，1 号栈从右向左；top0=-1、top1=MAX_SIZE。 */

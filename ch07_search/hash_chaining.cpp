@@ -5,8 +5,13 @@
 
 // --- 数据结构定义 ---
 constexpr int BUCKETS = 11;
-struct HashNode { int key; HashNode *next; };
-struct HashTable { HashNode *bucket[BUCKETS]; };
+typedef struct HashNode {
+    int key;
+    struct HashNode *next;
+} HashNode;
+typedef struct HashTable {
+    HashNode *bucket[BUCKETS];
+} HashTable;
 
 // --- 函数声明与行为契约 ---
 /** 桶号 ((key%BUCKETS)+BUCKETS)%BUCKETS；重复键或分配失败返回 false；头插结点。 */

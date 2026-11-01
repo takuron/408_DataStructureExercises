@@ -5,8 +5,12 @@
 
 // --- 数据结构定义 ---
 // 0 为头结点，1 为备用链表头；-1 表示链尾；可存 MAX_SIZE-2 个数据。
-struct Component { int data, next; };
-struct StaticList { Component node[MAX_SIZE]; };
+typedef struct Component {
+    int data, next;
+} Component;
+typedef struct StaticList {
+    Component node[MAX_SIZE];
+} StaticList;
 
 // --- 函数声明与行为契约 ---
 /** 数据链为空；把下标 [2,MAX_SIZE) 连成备用链。 */

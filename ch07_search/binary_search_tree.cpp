@@ -4,8 +4,11 @@
 #include "common.h"
 
 // --- 数据结构定义 ---
-struct BSTNode { int key; BSTNode *left, *right; };
-using BSTree = BSTNode *;
+typedef struct BSTNode {
+    int key;
+    struct BSTNode *left, *right;
+} BSTNode;
+typedef BSTNode *BSTree;
 
 // --- 函数声明与行为契约 ---
 /** 返回匹配结点，找不到返回 nullptr。 */

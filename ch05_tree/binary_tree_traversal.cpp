@@ -7,7 +7,7 @@
 // 二叉链表结点定义
 typedef struct BiNode {
     char data;
-    BiNode *lchild, *rchild;
+    struct BiNode *lchild, *rchild;
 } BiNode, *BiTree;
 
 // ==========================================

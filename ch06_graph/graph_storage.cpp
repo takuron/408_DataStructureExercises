@@ -6,9 +6,18 @@
 // --- 数据结构定义 ---
 constexpr int VMAX = 20;
 // 本文件为无权无向简单图；矩阵 0 表示无边，1 表示有边。
-struct MGraph { int edge[VMAX][VMAX]; int n, m; };
-struct ArcNode { int adjvex; ArcNode *next; };
-struct ALGraph { ArcNode *head[VMAX]; int n, m; };
+typedef struct MGraph {
+    int edge[VMAX][VMAX];
+    int n, m;
+} MGraph;
+typedef struct ArcNode {
+    int adjvex;
+    struct ArcNode *next;
+} ArcNode;
+typedef struct ALGraph {
+    ArcNode *head[VMAX];
+    int n, m;
+} ALGraph;
 
 // --- 函数声明与行为契约 ---
 /** n 范围 [0,VMAX]；清空矩阵，设置顶点数，边数置零。 */
