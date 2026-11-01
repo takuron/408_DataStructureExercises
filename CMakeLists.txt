@@ -9,7 +9,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 include_directories(${CMAKE_SOURCE_DIR}/common)
 
 # 递归扫描当前项目目录下所有的 .cpp 文件（排除 common 目录下的辅助文件）
-file(GLOB_RECURSE CPP_FILES
+file(GLOB_RECURSE CPP_FILES CONFIGURE_DEPENDS
     "ch*/*.cpp"
 )
 
